@@ -1,65 +1,37 @@
-import { FC, useState } from "react";
-import styled from "styled-components";
-
-interface TreeNode {
-  id: number;
-  name: string;
-  type: string;
-  code: string;
-  parent_section_id: number | null;
-  children: TreeNode[];
-}
-
-interface TreeItemProps {
-  node: TreeNode;
-  level: number;
-}
-
-const TreeNodeContainer = styled.div<{ level: number }>`
-  margin-left: ${(props) => props.level * 20}px;
-  cursor: pointer;
-  font-family: "Arial, sans-serif", sans-serif;
-  color: #333;
-  font-size: 14px;
-`;
-
-const TreeItem: FC<TreeItemProps> = ({ node, level }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const hasChildren = node.children && node.children.length > 0;
-
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return (
-    <div>
-      <TreeNodeContainer level={level} onClick={toggleOpen}>
-        {hasChildren && <span>{isOpen ? "−" : "+"}</span>}
-        <span>
-          {" "}
-          {node.name} ({node.code})
-        </span>
-      </TreeNodeContainer>
-      {isOpen && hasChildren && (
-        <div>
-          {node.children.map((child) => (
-            <TreeItem key={child.id} node={child} level={level + 1} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+import React from "react";
+import TreeViewItem from "./TreeViewItem";
+import { useRootSections } from "../../hooks/useRootSections";
+import { TreeNode } from "../../api/types";
+import { useDebouncedSearchSections } from "../../hooks/useSearchByQuery.ts";
 
 interface TreeViewProps {
-  data: TreeNode[];
+  query: string;
 }
 
-const TreeView: FC<TreeViewProps> = ({ data }) => {
+const TreeView: React.FC<TreeViewProps> = ({ query }) => {
+  const {
+    data: rootData,
+    isLoading: isRootLoading,
+    isError: isRootError,
+  } = useRootSections();
+
+  const {
+    data: searchData,
+    isLoading: isSearchLoading,
+    isError: isSearchError,
+  } = useDebouncedSearchSections(query);
+
+  const data = query ? searchData : rootData;
+  const isLoading = query ? isSearchLoading : isRootLoading;
+  const isError = query ? isSearchError : isRootError;
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading data</div>;
+
   return (
     <div>
-      {data.map((node) => (
-        <TreeItem key={node.id} node={node} level={0} />
+      {data?.map((node: TreeNode) => (
+        <TreeViewItem key={node.id} node={node} level={0} />
       ))}
     </div>
   );

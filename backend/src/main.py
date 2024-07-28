@@ -1,11 +1,14 @@
+from typing import List
+
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from typing import List
-from .database import Database
+
 from .dal import SectionDAL
-from .services import SectionService
+from .database import Database
 from .models import Section, NameGroup, Work, WorkDetail
+from .services import SectionService
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -14,6 +17,14 @@ templates = Jinja2Templates(directory="templates")
 db = Database()
 section_dal = SectionDAL(db)
 section_service = SectionService(section_dal)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 # API Endpoints
