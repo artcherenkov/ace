@@ -67,7 +67,7 @@ def analyze_structure(data):
 
 
 def main():
-    file_path = '../../initial_normative_data/ФЕР.xml'  # Укажите путь к вашему XML файлу
+    file_path = '../initial_normative_data/ФЕР.xml'  # Укажите путь к вашему XML файлу
     data = parse_xml(file_path)
     analyze_structure(data)
 

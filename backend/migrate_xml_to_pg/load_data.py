@@ -400,7 +400,7 @@ def parse_work(work_data, name_group_id):
 
 
 # Запуск миграции
-migrate_data('../../initial_normative_data/ФЕР.xml')
+migrate_data('../initial_normative_data/ФЕР.xml')
 
 # Вывод всех ошибок после завершения миграции
 if errors:

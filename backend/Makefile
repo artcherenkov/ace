@@ -3,6 +3,7 @@ PYTHON := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 PIP_COMPILE := $(VENV)/bin/pip-compile
 UVICORN := $(VENV)/bin/uvicorn
+PYTHONPATH := $(shell pwd)/src
 
 .PHONY: venv install update-requirements run
 
@@ -16,4 +17,4 @@ update-requirements: install
 	$(PIP) freeze > requirements.txt
 
 run:
-	$(UVICORN) src.main:app --reload
+	.venv/bin/uvicorn src.main:app --reload

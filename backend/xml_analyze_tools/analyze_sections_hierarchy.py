@@ -3,7 +3,7 @@ import collections
 from collections import defaultdict
 
 # Путь к вашему XML файлу
-file_path = '../../initial_normative_data/ФЕРм.xml'
+file_path = '../initial_normative_data/ФЕРм.xml'
 
 
 # Функция для парсинга XML и вывода атрибутов секций с отступами
